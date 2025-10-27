@@ -1,0 +1,21 @@
+# 🐳 AI Tabanlı Hukuk Sistemi - Development Dockerfile
+
+FROM node:20-alpine
+
+# Çalışma dizinini ayarla
+WORKDIR /app
+
+# Package dosyalarını kopyala
+COPY package*.json ./
+
+# Bağımlılıkları yükle (dev dependencies dahil)
+RUN npm ci
+
+# Kaynak kodunu kopyala
+COPY . .
+
+# Development port'unu aç
+EXPOSE 3000
+
+# Development modunda çalıştır
+CMD ["npm", "run", "dev"]
