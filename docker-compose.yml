@@ -1,0 +1,151 @@
+# 🐳 AI Tabanlı Hukuk Sistemi - Docker Compose
+
+version: '3.8'
+
+services:
+  # Frontend - Next.js uygulaması
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai-hukuk-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - NEXT_PUBLIC_API_URL=http://backend:8000/v1
+    depends_on:
+      - backend
+    networks:
+      - ai-hukuk-network
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`ai-hukuk.local`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+
+  # Backend - API servisi
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ai-hukuk-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=production
+      - PORT=8000
+      - HOST=0.0.0.0
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=ai_hukuk_user
+      - DB_PASSWORD=secure_mysql_password_2024
+      - DB_NAME=ai_hukuk_db
+      - JWT_SECRET=ai-hukuk-super-secret-jwt-key-production-2024-change-this
+      - JWT_REFRESH_SECRET=ai-hukuk-refresh-secret-key-production-2024-change-this
+      - BCRYPT_ROUNDS=12
+      - CORS_ORIGIN=http://frontend:3000,http://localhost:3000
+      - RATE_LIMIT_WINDOW_MS=900000
+      - RATE_LIMIT_MAX_REQUESTS=100
+    depends_on:
+      - mysql
+      # - redis  # Şimdilik devre dışı - caching gerekmediği için
+    networks:
+      - ai-hukuk-network
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.ai-hukuk.local`)"
+      - "traefik.http.services.backend.loadbalancer.server.port=8000"
+
+  # MySQL veritabanı
+  mysql:
+    image: mysql:8.0
+    container_name: ai-hukuk-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_2024
+      MYSQL_DATABASE: ai_hukuk_db
+      MYSQL_USER: ai_hukuk_user
+      MYSQL_PASSWORD: secure_mysql_password_2024
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/database/init:/docker-entrypoint-initdb.d
+    ports:
+      - "3307:3306"
+    networks:
+      - ai-hukuk-network
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    labels:
+      - "traefik.enable=false"
+
+  # Redis cache - ŞİMDİLİK DEVREDE DIŞI (kullanmıyoruz)
+  # Redis session storage ve caching için kullanılır
+  # İleride performance artırmak için eklenebilir
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: ai-hukuk-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - ai-hukuk-network
+  #   restart: unless-stopped
+  #   command: redis-server --appendonly yes --requirepass redis-password
+
+  # Nginx reverse proxy - ŞİMDİLİK DEVREDE DIŞI (config dosyası yok)
+  # Nginx SSL/TLS, load balancing ve production için kullanılır
+  # İleride production deployment için gerekli
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: ai-hukuk-nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./nginx/ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - frontend
+  #     - backend
+  #   networks:
+  #     - ai-hukuk-network
+
+  # Prometheus monitoring - ŞİMDİLİK DEVREDE DIŞI (config dosyası yok)
+  # Production'da sistem metrikleri, loglar ve performans izleme için kullanılır
+  # İleride production deployment için gerekli
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: ai-hukuk-prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  #     - prometheus_data:/prometheus
+  #   networks:
+  #     - ai-hukuk-network
+
+# Network tanımlamaları
+networks:
+  ai-hukuk-network:
+    driver: bridge
+    name: ai-hukuk-network
+
+# Volume tanımlamaları
+volumes:
+  mysql_data:
+    driver: local
+    name: ai-hukuk-mysql-data
+  # redis_data:
+  #   driver: local
+  #   name: ai-hukuk-redis-data
+  # prometheus_data:
+  #   driver: local
+  #   name: ai-hukuk-prometheus-data
+
+# Override for development
+# docker-compose -f docker-compose.yml -f docker-compose.dev.yml up

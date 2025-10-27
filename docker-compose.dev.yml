@@ -1,0 +1,52 @@
+# 🛠️ Development override for Docker Compose
+
+version: '3.8'
+
+services:
+  # Frontend development mode
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+    command: npm run dev
+    ports:
+      - "3000:3000"
+
+  # Backend development mode  
+  backend:
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DEBUG=*
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=dev_user
+      - DB_PASSWORD=dev_password
+      - DB_NAME=ai_hukuk_dev
+      - JWT_SECRET=dev-jwt-secret-key-not-for-production
+      - CORS_ORIGIN=http://frontend:3000,http://localhost:3000
+      - NEXT_PUBLIC_API_URL=http://backend:8000/v1
+    command: npm run dev
+
+  # MySQL development
+  mysql:
+    environment:
+      MYSQL_ROOT_PASSWORD: dev_root_password
+      MYSQL_DATABASE: ai_hukuk_dev
+      MYSQL_USER: dev_user
+      MYSQL_PASSWORD: dev_password
+    ports:
+      - "3307:3306"
+
+  # Redis development
+  redis:
+    command: redis-server --appendonly yes
