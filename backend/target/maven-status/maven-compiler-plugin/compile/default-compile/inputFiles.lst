@@ -1,0 +1,15 @@
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/config/SecurityConfig.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/dto/response/ApiResponse.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/repository/UserRepository.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/dto/response/AuthResponse.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/entity/User.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/dto/request/LoginRequest.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/dto/response/UserResponse.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/AiHukukApplication.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/util/JwtUtil.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/controller/HealthController.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/service/UserService.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/exception/GlobalExceptionHandler.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/dto/request/RegisterRequest.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/controller/AuthController.java
+/Users/muhammedeneskaydi/WebstormProjects/Ai_Based_Law/backend/src/main/java/com/aihukuk/filter/JwtAuthenticationFilter.java

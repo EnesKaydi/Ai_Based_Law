@@ -37,28 +37,31 @@
   - [x] `/asistan/ceza-tahmini` - Ceza tahmini ✅
   - [x] `/asistan/toplum-hizmeti` - Toplum hizmeti ✅
 
-## 🔗 BACKEND ENTEGRASYONU (Öncelik: 3)
+## 🔗 BACKEND ENTEGRASYONU (Öncelik: 3) - ✅ BİR KISMI TAMAMLANDI!
 
 ### 🔐 Kimlik Doğrulama ve Güvenlik Sistemi
-- [ ] **Kullanıcı Kayıt API**: Email/şifre ile kayıt endpoint'i
+- [x] **Java Spring Boot Migration**: JavaScript'ten Java'ya dönüşüm ✅
+- [x] **Kullanıcı Kayıt API**: POST /v1/auth/register endpoint'i ✅
+- [x] **Giriş API**: POST /v1/auth/login endpoint'i ✅
+- [x] **JWT Token Yönetimi**: Güvenli oturum yönetimi ✅
+- [x] **Rate Limiting**: API isteklerinde spam koruması ✅
+- [x] **Swagger Dokümantasyonu**: API docs hazır ✅
+- [x] **Docker Container**: Backend container düzgün çalışıyor ✅
 - [ ] **Email Doğrulama Sistemi**: Mail adresine doğrulama kodu gönderme
   - [ ] **SMTP Konfigürasyonu**: Mail gönderim servisi ayarları
   - [ ] **Doğrulama Kodu Üretimi**: 6 haneli güvenli kod sistemi
   - [ ] **Email Template**: HTML formatında doğrulama maili tasarımı
   - [ ] **Kod Süresi**: 15 dakika geçerlilik süreli sistem
-- [ ] **Giriş API**: Email/şifre doğrulama ve JWT token üretimi
 - [ ] **Şifre Sıfırlama**: Email ile şifre yenileme sistemi
-- [ ] **JWT Token Yönetimi**: Güvenli oturum yönetimi
-- [ ] **Rate Limiting**: API isteklerinde spam koruması
 
 ### 🔌 API Hazırlığı
-- [ ] **API Client Yapısı**: Frontend için API bağlantı katmanı
-- [ ] **Mock Data**: Test verileri için geçici veriler
+- [x] **API Client Yapısı**: Frontend için API bağlantı katmanı ✅
+- [x] **Error Handling**: API hata yönetimi ve kullanıcı bildirimleri ✅
 - [ ] **State Management**: Uygulama durumu yönetimi (Context API/Zustand)
-- [ ] **Error Handling**: API hata yönetimi ve kullanıcı bildirimleri
+- [ ] **Mock Data**: Test verileri için geçici veriler
 
 ### 🗄️ Veritabanı Tasarımı
-- [ ] **Kullanıcı Tablosu**: User model ve ilişkiler 
+- [x] **Kullanıcı Tablosu**: User model ve ilişkiler ✅
 - [ ] **Email Doğrulama Tablosu**: Verification codes tablosu
 - [ ] **Oturum Tablosu**: Active sessions tracking
 - [ ] **Audit Log**: Kullanıcı işlem geçmişi

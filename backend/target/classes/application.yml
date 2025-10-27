@@ -1,0 +1,181 @@
+# 🗄️ AI Hukuk Sistemi - Spring Boot Configuration
+# JavaScript database.js konfigürasyonunun Java karşılığı
+
+# Server Configuration
+server:
+  port: ${PORT:8000}                    # JavaScript server.js'deki PORT
+  address: 0.0.0.0                     # Tüm interface'lerde dinle
+  servlet:
+    context-path: ""                    # Root path
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  compression:
+    enabled: true                       # JavaScript compression middleware
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
+
+# Spring Configuration
+spring:
+  application:
+    name: ai-hukuk-backend
+  # Circular dependency geçici çözümü
+  main:
+    allow-circular-references: true
+    
+  # Database Configuration (MySQL)
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ai_hukuk_db}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Istanbul&characterEncoding=UTF-8
+    username: ${DB_USER:ai_hukuk_user}
+    password: ${DB_PASSWORD:secure_mysql_password_2024}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 60000         # JavaScript acquireTimeout
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      maximum-pool-size: ${DB_POOL_SIZE:10}    # JavaScript connectionLimit
+      minimum-idle: 2
+      pool-name: AiHukukHikariCP
+      
+  # JPA Configuration (JavaScript Sequelize karşılığı)
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update                 # Tablolar varsa güncelle, yoksa oluştur
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: ${SHOW_SQL:false}
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: false
+        jdbc:
+          time_zone: Europe/Istanbul    # JavaScript timezone: '+03:00'
+        
+  # Security Configuration
+  security:
+    user:
+      password: ${ADMIN_PASSWORD:admin123}  # Varsayılan admin şifresi
+      
+  # Actuator Configuration (Health Check)
+  boot:
+    admin:
+      client:
+        enabled: false
+
+# Management Endpoints (JavaScript health.js karşılığı)
+management:
+  endpoints:
+    web:
+      base-path: /v1/health
+      exposure:
+        include: health,info,metrics,env
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  health:
+    db:
+      enabled: true
+    diskspace:
+      enabled: true
+
+# JWT Configuration (JavaScript auth.js karşılığı)
+jwt:
+  secret: ${JWT_SECRET:ai_hukuk_super_secret_key_2024_java_spring_boot}
+  refresh-secret: ${JWT_REFRESH_SECRET:ai_hukuk_refresh_secret_key_2024_java_spring_boot}
+  access-expires-in: ${JWT_ACCESS_EXPIRES_IN:3600}      # 1 hour (JavaScript'teki gibi)
+  refresh-expires-in: ${JWT_REFRESH_EXPIRES_IN:2592000} # 30 days
+  issuer: ai-hukuk-api
+  audience: ai-hukuk-frontend
+
+# CORS Configuration (JavaScript CORS middleware karşılığı)
+cors:
+  allowed-origins: ${CORS_ORIGIN:http://localhost:3000}  # JavaScript corsOrigins
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: Content-Type,Authorization,X-Requested-With
+  allow-credentials: true
+  max-age: 3600
+
+# Rate Limiting (JavaScript express-rate-limit karşılığı)
+rate-limit:
+  window-ms: ${RATE_LIMIT_WINDOW_MS:900000}        # 15 minutes
+  max-requests: ${RATE_LIMIT_MAX_REQUESTS:100}     # JavaScript limiter
+  auth-window-ms: 900000                           # 15 minutes
+  auth-max-requests: 5                             # JavaScript authLimiter
+
+# BCrypt Configuration (JavaScript bcrypt karşılığı)  
+bcrypt:
+  rounds: ${BCRYPT_ROUNDS:12}                      # JavaScript saltRounds
+
+# Logging Configuration
+logging:
+  level:
+    com.aihukuk: ${LOG_LEVEL:INFO}
+    org.springframework.security: WARN
+    org.hibernate.SQL: ${SQL_LOG_LEVEL:WARN}
+    org.springframework.web: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/ai-hukuk-backend.log
+
+# API Documentation (Swagger)
+springdoc:
+  api-docs:
+    path: /v1/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  info:
+    title: AI Hukuk Sistemi API
+    description: AI Tabanlı Hukuk Sistemi Backend REST API
+    version: 1.0.0
+    contact:
+      name: AI Hukuk Sistemi Team
+      
+---
+# Development Profile
+spring:
+  config:
+    activate:
+      on-profile: development
+      
+  # Development Database
+  datasource:
+    url: jdbc:mysql://localhost:3306/ai_hukuk_db_dev?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Istanbul
+    
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop              # Geliştirme için her başlatmada temiz tablo
+      
+logging:
+  level:
+    com.aihukuk: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+
+---
+# Production Profile  
+spring:
+  config:
+    activate:
+      on-profile: production
+      
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate                 # Production'da sadece doğrula
+      
+# Production Security
+server:
+  ssl:
+    enabled: false                       # SSL sertifikası için true yapılacak
+    
+logging:
+  level:
+    com.aihukuk: WARN
+    org.springframework.security: ERROR

@@ -46,12 +46,14 @@ AI Tabanlı Hukuk Sistemi, hukuki süreçleri dijitalleştiren ve kullanıcılar
 - **Glassmorphism Design** - Modern UI tasarım
 
 ### Backend
-- **Node.js 20** - Runtime environment
-- **Express.js 4.x** - Web framework
+- **Java 17** - Runtime environment
+- **Spring Boot 3.1.5** - Enterprise framework
+- **Spring Security** - Security framework
+- **Spring Data JPA** - Database ORM
 - **MySQL 8.0** - İlişkisel veritabanı
-- **Sequelize ORM** - Database ORM
 - **JWT** - Authentication tokens
 - **bcrypt** - Şifre hashleme
+- **Swagger/OpenAPI** - API dokümantasyonu
 
 ### DevOps & Tools
 - **Docker & Docker Compose** - Container orchestration
@@ -64,24 +66,25 @@ AI Tabanlı Hukuk Sistemi, hukuki süreçleri dijitalleştiren ve kullanıcılar
 
 ```
 Ai_Based_Law/
-├── 📁 backend/                     # Backend API servisi
-│   ├── 📁 src/
+├── 📁 backend/                     # Backend API servisi (Java Spring Boot)
+│   ├── 📁 src/main/java/com/aihukuk/
 │   │   ├── 📁 config/
-│   │   │   └── database.js          # Veritabanı konfigürasyonu
-│   │   ├── 📁 middleware/
-│   │   │   ├── auth.js              # JWT authentication
-│   │   │   ├── errorHandler.js      # Hata yönetimi
-│   │   │   └── notFound.js          # 404 handler
-│   │   ├── 📁 models/
-│   │   │   └── User.js              # User modeli
-│   │   ├── 📁 routes/
-│   │   │   ├── auth.js              # Authentication routes
-│   │   │   └── health.js            # Health check
-│   │   └── server.js                # Ana sunucu dosyası
-│   ├── 📁 database/init/
-│   │   └── 01-init.sql              # Veritabanı başlangıç script
+│   │   │   └── SecurityConfig.java  # Spring Security konfigürasyonu
+│   │   ├── 📁 controller/
+│   │   │   ├── AuthController.java  # Authentication endpoints
+│   │   │   └── HealthController.java # Health check endpoints
+│   │   ├── 📁 entity/
+│   │   │   └── User.java            # JPA Entity
+│   │   ├── 📁 filter/
+│   │   │   └── JwtAuthenticationFilter.java # JWT filter
+│   │   ├── 📁 service/
+│   │   │   └── UserService.java     # Business logic
+│   │   └── 📁 util/
+│   │       └── JwtUtil.java          # JWT utilities
+│   ├── src/main/resources/
+│   │   └── application.yml          # Spring Boot konfigürasyonu
 │   ├── Dockerfile                   # Backend container
-│   └── package.json                 # Backend dependencies
+│   └── pom.xml                      # Maven dependencies
 │
 ├── 📁 frontend/                     # Next.js frontend
 │   ├── 📁 src/
@@ -184,6 +187,7 @@ npm run dev
 ### 📍 Erişim URL'leri
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000/v1
+- **Swagger Docs**: http://localhost:8000/swagger-ui/index.html
 - **Health Check**: http://localhost:8000/v1/health
 
 ## 🐳 Docker ile Çalıştırma
@@ -263,6 +267,12 @@ Sistem sağlık kontrolü
   }
 }
 ```
+
+### 📚 Swagger API Dokümantasyonu
+
+**Swagger UI** ile tüm endpoint'leri görüntüleyebilir ve test edebilirsiniz:
+- **URL**: http://localhost:8000/swagger-ui/index.html
+- **OpenAPI JSON**: http://localhost:8000/v1/api-docs
 
 Detaylı API dokümantasyonu için: [BACKEND_API_DOCUMENTATION.md](./BACKEND_API_DOCUMENTATION.md)
 
