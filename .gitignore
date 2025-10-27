@@ -72,6 +72,14 @@ jspm_packages/
 # Next.js
 .next/
 out/
+frontend/.next/
+
+# Backend
+backend/node_modules/
+backend/*.log
+
+# Docker volumes
+**/node_modules/
 
 # Nuxt.js
 .nuxt
